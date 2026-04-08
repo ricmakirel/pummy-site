@@ -518,14 +518,14 @@ function CommunitySection() {
             Join our community
           </motion.h2>
 
-          <div className="flex flex-wrap justify-center items-start gap-10 sm:gap-16">
+          <div className="flex flex-wrap justify-center items-start gap-6 sm:gap-16">
             {links.map((item, i) => (
               <motion.a
                 key={item.label}
                 href={item.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex flex-col items-center gap-3 w-40"
+                className="group flex flex-col items-center gap-3 w-36 sm:w-40"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
@@ -542,7 +542,7 @@ function CommunitySection() {
             {/* Email — click to reveal */}
             <motion.button
               onClick={addToast}
-              className="group flex flex-col items-center gap-3 w-40"
+              className="group flex flex-col items-center gap-3 w-36 sm:w-40"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}

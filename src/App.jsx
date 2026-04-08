@@ -376,20 +376,16 @@ function ProductShowcase() {
                     <p className="text-xs font-mono text-stone-400 px-4 text-center">{product.placeholder}</p>
                   </div>
                   <div className="px-5 py-4">
-                    <div className="flex items-center justify-between gap-4">
-                      <div className="min-w-0">
-                        <h3 className="text-base font-serif font-bold text-stone-900 leading-snug">{product.name}</h3>
-                        <p className="text-stone-400 text-xs leading-snug mt-0.5 truncate">{product.desc}</p>
-                      </div>
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        <span className="text-base font-bold text-stone-900">{product.price}</span>
-                        <button
-                          className="px-4 py-1.5 bg-stone-900 text-white text-xs font-semibold rounded-full hover:bg-stone-700 active:scale-95 transition-all whitespace-nowrap"
-                          onClick={e => e.stopPropagation()}
-                        >
-                          Order →
-                        </button>
-                      </div>
+                    <h3 className="text-base font-serif font-bold text-stone-900 leading-snug">{product.name}</h3>
+                    <p className="text-stone-400 text-xs leading-snug mt-0.5 truncate">{product.desc}</p>
+                    <div className="flex items-center gap-2 mt-3">
+                      <span className="text-base font-bold text-stone-900">{product.price}</span>
+                      <button
+                        className="px-4 py-1.5 bg-stone-900 text-white text-xs font-semibold rounded-full hover:bg-stone-700 active:scale-95 transition-all whitespace-nowrap"
+                        onClick={e => e.stopPropagation()}
+                      >
+                        Order →
+                      </button>
                     </div>
                   </div>
                   {!isCenter && (
@@ -522,7 +518,7 @@ function CommunitySection() {
             Join our community
           </motion.h2>
 
-          <div className="flex flex-col sm:flex-row justify-center items-start gap-10 sm:gap-16">
+          <div className="flex flex-wrap justify-center items-start gap-10 sm:gap-16">
             {links.map((item, i) => (
               <motion.a
                 key={item.label}

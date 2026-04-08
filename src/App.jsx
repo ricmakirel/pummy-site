@@ -375,18 +375,18 @@ function ProductShowcase() {
                   <div className={`h-56 sm:h-64 lg:h-72 bg-gradient-to-br ${product.gradient} flex items-center justify-center`}>
                     <p className="text-xs font-mono text-stone-400 px-4 text-center">{product.placeholder}</p>
                   </div>
-                  <div className="px-5 py-4">
-                    <h3 className="text-base font-serif font-bold text-stone-900 leading-snug">{product.name}</h3>
-                    <p className="text-stone-400 text-xs leading-snug mt-0.5 truncate">{product.desc}</p>
-                    <div className="flex items-center gap-2 mt-3">
-                      <span className="text-base font-bold text-stone-900">{product.price}</span>
-                      <button
-                        className="px-4 py-1.5 bg-stone-900 text-white text-xs font-semibold rounded-full hover:bg-stone-700 active:scale-95 transition-all whitespace-nowrap"
-                        onClick={e => e.stopPropagation()}
-                      >
-                        Order →
-                      </button>
+                  <div className="px-5 py-4 flex justify-between items-end">
+                    <div className="min-w-0 pr-3">
+                      <h3 className="text-base font-serif font-bold text-stone-900 leading-snug">{product.name}</h3>
+                      <p className="text-stone-400 text-xs leading-snug mt-0.5 truncate">{product.desc}</p>
+                      <span className="text-base font-bold text-stone-900 mt-2 block">{product.price}</span>
                     </div>
+                    <button
+                      className="flex-shrink-0 px-4 py-1.5 bg-stone-900 text-white text-xs font-semibold rounded-full hover:bg-stone-700 active:scale-95 transition-all whitespace-nowrap"
+                      onClick={e => e.stopPropagation()}
+                    >
+                      Order →
+                    </button>
                   </div>
                   {!isCenter && (
                     <div className="absolute inset-0 bg-amber-50/70 backdrop-blur-[4px] rounded-3xl pointer-events-none" />
@@ -507,7 +507,7 @@ function CommunitySection() {
   return (
     <>
       <section id="community" className="relative z-10 py-24 px-6 bg-white/30">
-        <div className="max-w-3xl mx-auto text-center">
+        <div className="max-w-2xl mx-auto text-center">
           <motion.h2
             className="text-3xl sm:text-4xl font-serif font-bold text-stone-900 mb-16"
             initial={{ opacity: 0, y: 20 }}
@@ -518,14 +518,14 @@ function CommunitySection() {
             Join our community
           </motion.h2>
 
-          <div className="flex flex-wrap justify-center items-start gap-6 sm:gap-16">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-y-10 gap-x-6 sm:gap-x-8 justify-items-center">
             {links.map((item, i) => (
               <motion.a
                 key={item.label}
                 href={item.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex flex-col items-center gap-3 w-36 sm:w-40"
+                className="group flex flex-col items-center gap-3"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
@@ -542,7 +542,7 @@ function CommunitySection() {
             {/* Email — click to reveal */}
             <motion.button
               onClick={addToast}
-              className="group flex flex-col items-center gap-3 w-36 sm:w-40"
+              className="group flex flex-col items-center gap-3"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}

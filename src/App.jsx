@@ -307,7 +307,7 @@ function ProductShowcase() {
       placeholder: '[Leather Carving Product Image]',
     },
     {
-      name: 'Stylized Pet Figurine',
+      name: 'Stylized Figurine',
       desc: 'Reimagined in a style you choose.',
       price: 'From $59',
       gradient: 'from-rose-100 to-pink-100',

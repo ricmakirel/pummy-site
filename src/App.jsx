@@ -627,14 +627,65 @@ function CommunitySection() {
 // ─── App ───────────────────────────────────────────────────────────────────────
 export default function App() {
   const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState('idle'); // 'idle' | 'loading' | 'success' | 'error'
+  const [errorMsg, setErrorMsg] = useState('');
   const waitlistRef = useRef(null);
 
-  const handleSubmit = (e) => {
+  // ─── 前端频率限制：10分钟内最多3次 ───────────────────────────────────────────
+  const LS_KEY = 'pummy_waitlist_attempts';
+  const WINDOW_MS = 10 * 60 * 1000;
+  const MAX_ATTEMPTS = 3;
+
+  const checkLocalRateLimit = () => {
+    const now = Date.now();
+    const stored = localStorage.getItem(LS_KEY);
+    const attempts = stored ? JSON.parse(stored) : [];
+    const recent = attempts.filter(t => now - t < WINDOW_MS);
+    return { limited: recent.length >= MAX_ATTEMPTS, recent };
+  };
+
+  const recordAttempt = (recent) => {
+    localStorage.setItem(LS_KEY, JSON.stringify([...recent, Date.now()]));
+  };
+
+  // ─── 提交处理 ────────────────────────────────────────────────────────────────
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (email.includes('@')) {
-      setSubmitted(true);
-      setTimeout(() => { setEmail(''); setSubmitted(false); }, 3000);
+
+    // 前端频率限制
+    const { limited, recent } = checkLocalRateLimit();
+    if (limited) {
+      setStatus('error');
+      setErrorMsg("You're submitting too fast. Please try again later.");
+      return;
+    }
+
+    setStatus('loading');
+    recordAttempt(recent);
+
+    try {
+      const res = await fetch('https://api.pummy.art/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      if (res.ok) {
+        setStatus('success');
+        setEmail('');
+      } else if (res.status === 429) {
+        setStatus('error');
+        setErrorMsg("You're submitting too fast. Please try again later.");
+      } else if (res.status === 409) {
+        setStatus('error');
+        setErrorMsg("This email is already on the waitlist.");
+      } else {
+        setStatus('error');
+        setErrorMsg("Something went wrong. Please try again.");
+      }
+    } catch {
+      setStatus('error');
+      setErrorMsg("Something went wrong. Please try again.");
     }
   };
 
@@ -910,27 +961,47 @@ export default function App() {
               <input
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (status === 'error') setStatus('idle');
+                }}
                 placeholder="your@email.com"
-                className="flex-1 px-5 py-3.5 rounded-full bg-white/10 border border-white/20 text-white placeholder-stone-500 outline-none focus:border-orange-400 focus:bg-white/15 transition-all"
+                disabled={status === 'loading' || status === 'success'}
+                className="flex-1 px-5 py-3.5 rounded-full bg-white/10 border border-white/20 text-white placeholder-stone-500 outline-none focus:border-orange-400 focus:bg-white/15 transition-all disabled:opacity-50"
               />
               <button
                 type="submit"
-                className="px-6 py-3.5 bg-gradient-to-r from-orange-400 to-rose-400 text-white font-bold rounded-full hover:from-orange-500 hover:to-rose-500 active:scale-95 transition-all whitespace-nowrap shadow-lg shadow-orange-500/20"
+                disabled={status === 'loading' || status === 'success'}
+                className="px-6 py-3.5 bg-gradient-to-r from-orange-400 to-rose-400 text-white font-bold rounded-full hover:from-orange-500 hover:to-rose-500 active:scale-95 transition-all whitespace-nowrap shadow-lg shadow-orange-500/20 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Join Waitlist
+                {status === 'loading' ? 'Joining…' : 'Join Waitlist'}
               </button>
             </form>
 
-            {submitted && (
-              <motion.p
-                className="text-sm text-orange-400 mt-4 font-mono"
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                ✓ Confirmed. See you soon.
-              </motion.p>
-            )}
+            <AnimatePresence mode="wait">
+              {status === 'success' && (
+                <motion.p
+                  key="success"
+                  className="text-sm text-orange-400 mt-4 font-mono"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                >
+                  ✓ Confirmed. See you soon.
+                </motion.p>
+              )}
+              {status === 'error' && (
+                <motion.p
+                  key="error"
+                  className="text-sm text-rose-400 mt-4 font-mono"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                >
+                  ✕ {errorMsg}
+                </motion.p>
+              )}
+            </AnimatePresence>
 
             <p className="text-stone-600 text-xs mt-6">No spam, ever. Unsubscribe any time.</p>
           </motion.div>

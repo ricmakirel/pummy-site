@@ -966,12 +966,12 @@ export default function App() {
                   if (status === 'error') setStatus('idle');
                 }}
                 placeholder="your@email.com"
-                disabled={status === 'loading' || status === 'success'}
+                disabled={status === 'loading'}
                 className="flex-1 px-5 py-3.5 rounded-full bg-white/10 border border-white/20 text-white placeholder-stone-500 outline-none focus:border-orange-400 focus:bg-white/15 transition-all disabled:opacity-50"
               />
               <button
                 type="submit"
-                disabled={status === 'loading' || status === 'success'}
+                disabled={status === 'loading'}
                 className="px-6 py-3.5 bg-gradient-to-r from-orange-400 to-rose-400 text-white font-bold rounded-full hover:from-orange-500 hover:to-rose-500 active:scale-95 transition-all whitespace-nowrap shadow-lg shadow-orange-500/20 disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {status === 'loading' ? 'Joining…' : 'Join Waitlist'}
